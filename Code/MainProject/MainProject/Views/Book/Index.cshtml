@@ -1,0 +1,48 @@
+@model BookChappter
+@using Microsoft.EntityFrameworkCore
+@using MainProject.Data
+@inject ApplicationDbContext _context
+
+
+
+
+<!-- Default box -->
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">@Model.Name</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                    title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        @Html.Raw(Model.Content)
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+        @{
+
+            var nextChappter = await _context.BookChappter
+               .Include(b => b.CategoryID)
+               .SingleOrDefaultAsync(m => m.ID == Model.ID + 1);
+            if (nextChappter != null)
+            {
+                <a class="btn btn-primary pull-right" asp-action="index" asp-controller="book" asp-route-slugCa="@Model.CategoryID.Slug" asp-route-slugCh="@nextChappter.Slug">@nextChappter.Name</a>
+            }
+            var preChappter = await _context.BookChappter
+               .Include(b => b.CategoryID)
+               .SingleOrDefaultAsync(m => m.ID == Model.ID - 1);
+            if (preChappter != null)
+            {
+                <a class="btn btn-primary pull-left" asp-action="index" asp-controller="book" asp-route-slugCa="@Model.CategoryID.Slug" asp-route-slugCh="@preChappter.Slug">@preChappter.Name</a>
+            }
+        }
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->

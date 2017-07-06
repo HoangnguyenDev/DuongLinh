@@ -1,0 +1,44 @@
+@model List<BookChappter>
+
+@{
+    ViewData["Title"] = "Danh sách chương " + ViewData["BookName"];
+    ViewData["Breadcrumb1"] = "Sách";
+    ViewData["Breadcrumb2"] = ViewData["BookName"];
+    ViewData["Breadcrumb3"] = "Danh sách";
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header">
+                <div class="box-title">
+                    <h3>@ViewData["BookName"]</h3>
+                </div>
+            </div>
+            <div class="box-body">
+                <table id="layout-skins-list" class="table table-striped bring-up nth-2-center">
+                    <thead>
+                        <tr>
+                            <th style="width: 210px;">Danh sách chương</th>
+                            <th>Xem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><a asp-action=""></a>@item.Name</td>
+                                <td><a href="#" data-skin="skin-blue" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a></td>
+                            </tr>
+                        }
+
+                       
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<h2>ListChappter</h2>
+
+

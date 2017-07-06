@@ -1,0 +1,56 @@
+@model MainProject.Models.BookCategory
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["H1"] = "Tạo sách mới";
+    ViewData["Breadcrumb1"] = "Quản lý";
+    ViewData["Breadcrumb2"] = "Tên sách";
+    ViewData["Breadcrumb3"] = "Tạo mới";
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">Tạo mới</h3>
+    </div>
+
+    <form asp-action="Create" class="form-horizontal">
+        <div class="box-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CategoryName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="CategoryName" class="form-control" />
+                    <span asp-validation-for="CategoryName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryDes" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="CategoryDes" class="form-control" />
+                    <span asp-validation-for="CategoryDes" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Slug" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Slug" class="form-control" />
+                    <span asp-validation-for="Slug" class="text-danger"></span>
+                </div>
+            </div>
+            
+        </div>
+        <div class="box-footer clearfix">
+            <input type="submit" value="Tạo mới" class="btn btn-primary pull-right" />
+            <a asp-action="Index" class="btn btn-default pull-left">Back to List</a>
+        </div>
+      
+    </form>
+
+</div>
+
+<div>
+    
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

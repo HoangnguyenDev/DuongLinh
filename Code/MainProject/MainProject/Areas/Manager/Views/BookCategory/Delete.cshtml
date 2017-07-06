@@ -1,0 +1,41 @@
+@model MainProject.Models.BookCategory
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["H1"] = "Xóa";
+    ViewData["Breadcrumb1"] = "Quản lý";
+    ViewData["Breadcrumb2"] = "Tên sách";
+    ViewData["Breadcrumb3"] = "Xóa";
+}
+<div class="box box-danger">
+    <div class="box-header">
+        <h2 class="box-title">Xóa</h2>
+    </div>
+    <div class="box-body">
+<h4>Bạn chằn chắn rằng bạn muốn xóa chứ?</h4>
+        <input type="hidden" asp-for="ID" />
+            <dl class="dl-horizontal">
+                
+                <dt>
+                    @Html.DisplayNameFor(model => model.CategoryName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CategoryName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CategoryDes)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CategoryDes)
+                </dd>
+            </dl>
+        </div>
+        <div class="box-footer">
+            <form asp-action="Delete">
+                <div class="form-actions no-color">
+                    <input type="submit" value="Xóa" class="btn btn-danger pull-right" /> 
+                    <a asp-action="Index" class="pull-left btn btn-primary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+</div>

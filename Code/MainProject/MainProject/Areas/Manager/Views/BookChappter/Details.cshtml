@@ -1,0 +1,43 @@
+@model MainProject.Models.BookChappter
+
+@{
+    ViewData["Title"] = "Chi tiết";
+    ViewData["H1"] = "Chi tiết sách";
+    ViewData["Breadcrumb1"] = "Quản lý";
+    ViewData["Breadcrumb2"] = "Chương sách";
+    ViewData["Breadcrumb3"] = "Chi tiết";
+}
+<div class="box box-primary">
+    <div class="box-header">
+
+        <h3 class="box-title">Chi tiết</h3>
+    </div>
+
+
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
+            <dd>
+                @Html.Raw(Model.Content)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.CategoryID)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CategoryID.CategoryName)
+            </dd>
+        </dl>
+    </div>
+    <div class="box-footer">
+        <a asp-action="Edit" class="btn btn-warning pull-right" asp-route-id="@Model.ID">Chỉnh sửa</a> 
+        <a asp-action="Index" class="btn btn-default pull-left">Quay lại</a>
+    </div>
+    </div>

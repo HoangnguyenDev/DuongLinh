@@ -25,10 +25,10 @@ namespace MainProject.Data
         }
 
         public DbSet<MainProject.Models.BookCategory> BookCategory { get; set; }
-
         public DbSet<MainProject.Models.BookChappter> BookChappter { get; set; }
-
-        public DbSet<MainProject.Models.History> History { get; set; }
+        public DbSet<MainProject.Models.HistoryOfChappter> HistoryOfChappter { get; set; }
         public DbSet<MainProject.Models.HistoryofRedingBook> HistoryofRedingBook { get; set; }
+        public DbSet<MainProject.Models.Message> Message { get; set; }
+        public DbSet<MainProject.Models.Notifications> Notifications { get; set; }
     }
 }

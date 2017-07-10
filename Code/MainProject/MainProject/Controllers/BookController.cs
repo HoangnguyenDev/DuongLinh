@@ -7,9 +7,11 @@ using MainProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using MainProject.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MainProject.Controllers
 {
+    [Authorize(Roles = "Admin, Manager, Member")]
     public class BookController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -29,21 +31,36 @@ namespace MainProject.Controllers
             int chappterID = chappter.ID;
             int categoryID = chappter.BookCategoryID;
 
-            //Xac dinh xem da co doc cuon sach nay chua
+            //xac dinh xem co ai doc cuon sach nay chua
+            var IsReaded = _Context.HistoryofRedingBook
+                .Where(p => p.BookChappterID == chappterID).ToList();
+
+            //Xac dinh xem user nay da co doc cuon sach nay chua
             var oldHistory = _Context.HistoryofRedingBook
                 .Where(p => p.BookChappterID == chappterID && 
                 p.ApplicationUserID == user.Id).FirstOrDefault();
             if (oldHistory == null)
             {
                 _Context.Add(new HistoryofRedingBook { BookChappterID = chappterID, DateTime = DateTime.Now, ApplicationUserID = user.Id });
-                await _Context.SaveChangesAsync();
-                user.Score += 1;
+                
+                // cong diem x2 neu la nguoi doc dau tien
+                if (!IsReaded.Any())
+                    user.Score += 2;
+                else
+                    user.Score += 1;
                 _Context.Update(user);
-                await _Context.SaveChangesAsync();
             }
-            var applicationDbcontext = _Context.BookChappter.Include(p => p.CategoryID).Where(p => p.Slug == slugCh);
 
-            return View(await applicationDbcontext.FirstAsync());
+            // tang luot doc sach khi click
+            var applicationDbcontext = _Context.BookChappter.Include(p => p.CategoryID).Where(p => p.Slug == slugCh);
+            BookChappter book = await applicationDbcontext.FirstAsync();
+            book.View++;
+            _Context.Update(book);
+
+            //thong bao da doc cuon sach nay
+            _Context.Add(new Notifications { DateTime = DateTime.Now, IsReaded = true, BookChappterID = book.BookCategoryID, ApplicationUserID = user.Id });
+            await _Context.SaveChangesAsync();
+            return View(book);
         }
         private Task<ApplicationUser> GetCurrentUserAsync()
         {

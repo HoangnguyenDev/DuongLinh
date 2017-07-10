@@ -13,7 +13,7 @@ using static MainProject.Areas.Manager.ViewModels.UserViewModel;
 namespace MainProject.Areas.Manager.Controllers
 {
     [Area("manager")]
-    [Authorize(Roles = "Admins")]
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         private RoleManager<IdentityRole> _roleManager;
@@ -26,8 +26,11 @@ namespace MainProject.Areas.Manager.Controllers
         }
         [Route("quan-ly/quyen/")]
         public ViewResult Index() => View(_roleManager.Roles);
+
+        [Route("quan-ly/quyen/tao")]
         public IActionResult Create() => View();
         [HttpPost]
+        [Route("quan-ly/quyen/tao")]
         public async Task<IActionResult> Create([Required]string name)
         {
             if (ModelState.IsValid)
@@ -46,6 +49,7 @@ namespace MainProject.Areas.Manager.Controllers
             return View(name);
         }
         [HttpPost]
+        [Route("quan-ly/quyen/xoa")]
         public async Task<IActionResult> Delete(string id)
         {
             IdentityRole role = await _roleManager.FindByIdAsync(id);

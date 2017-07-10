@@ -5,6 +5,8 @@
     ViewData["Breadcrumb1"] = "Sách";
     ViewData["Breadcrumb2"] = ViewData["BookName"];
     ViewData["Breadcrumb3"] = "Danh sách";
+    IEnumerable<Message> message = ViewData["Messenger"] as IEnumerable<Message>;
+    IEnumerable<HistoryofRedingBook> historyOfReading = ViewData["HistoryofReading"] as IEnumerable<HistoryofRedingBook>;
 }
 <div class="row">
     <div class="col-md-6">
@@ -18,16 +20,25 @@
                 <table id="layout-skins-list" class="table table-striped bring-up nth-2-center">
                     <thead>
                         <tr>
-                            <th style="width: 210px;">Danh sách chương</th>
+                            <th>Danh sách chương</th>
                             <th>Xem</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
+                            ViewData["IsReaded"] = "text-blue";
+                            if (historyOfReading.Any())
+                            {
+                                var IsReaded = historyOfReading.Where(p => p.BookChappterID == item.ID).First();
+                                if (IsReaded != null)
+                                {
+                                    ViewData["IsReaded"] = "text-black";
+                                }
+                            }
                             <tr>
-                                <td><a asp-action=""></a>@item.Name</td>
-                                <td><a href="#" data-skin="skin-blue" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a></td>
+                                <td><a asp-action="index" class="@ViewData["IsReaded"]" asp-controller="book" asp-route-slugCa="@item.CategoryID.Slug" asp-route-slugCh="@item.Slug">@item.Name</a></td>
+                                <td><label>@item.View lượt xem     <a href="#" data-skin="skin-blue" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a></label></td>
                             </tr>
                         }
 
@@ -38,7 +49,12 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <!-- Chat box -->
+        @Html.Partial("~/Views/Messenger/Index.cshtml", message)
+        <!-- /.box (chat box) -->
+    </div>
 </div>
-<h2>ListChappter</h2>
+
 
 

@@ -1,0 +1,94 @@
+ @using MainProject.Data;
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext Context
+@model IEnumerable<Notifications>
+<div class="box box-danger">
+    <div class="box-header">
+        <i class="fa fa-envelope-o"></i>
+        <h3 class="box-title">Thông báo</h3>
+        @*<div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+            <div class="btn-group" data-toggle="btn-toggle">
+                <button type="button" class="btn btn-default btn-sm active">
+                    <i class="fa fa-square text-green"></i>
+                </button>
+                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-square text-red"></i></button>
+            </div>
+        </div>*@
+    </div>
+    <div class="box-body chat" id="notification-box">
+        <!-- chat item -->
+        @if (!Model.Any())
+        {
+            <label>Chưa có thông báo nào</label>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                if((await UserManager.GetUserAsync(User)).Id != item.ApplicationUserID)
+                { 
+                <div class="item">
+                    <img src="@item.User.PictureSmall" alt="user image" class="online">
+                    <p class="message">
+                        @{
+                            var time = String.Format("{0:hh\\:mm}", DateTime.Now.Subtract(item.DateTime));
+                        }
+                        @if (item.IsChapter)
+                        {
+                            var Chap = Context.BookChappter.Where(p => p.ID == item.BookChappterID).First();
+                            var Category = Context.BookCategory.Where(p => p.ID == Chap.BookCategoryID).First();
+                            <a asp-controller="book" asp-action="index" asp-route-slugCa="@Category.Slug" asp-route-slugCh="@Chap.Slug" class="name">
+                                Có chương mới
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> @time</small>
+                            </a>
+                             <label>@item.User.FullName vừa thêm @Chap.Name. Bạn có thể đọc ngay bây giờ</label>
+
+                        }
+                        @if (item.IsReaded)
+                        {
+                            var Chap = Context.BookChappter.Where(p => p.ID == item.BookChappterID).First();
+                            var Category = Context.BookCategory.Where(p => p.ID == Chap.BookCategoryID).First();
+                            <a href="#" class="name">
+                                Đã đọc
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> @time</small>
+                            </a>
+                            <label>@item.User.FullName vừa đọc @Chap.Name</label>
+                        }
+                        @if (item.Online)
+                        {
+                            <a href="#" class="name">
+                                Online
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> @time</small>
+                            </a>
+                            <label>@item.User.FullName vừa Online</label>
+                        }
+                    </p>
+                    @*<div class="attachment">
+                        <h4>Attachments:</h4>
+                        <p class="filename">
+                            Theme-thumbnail-image.jpg
+                        </p>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary btn-sm btn-flat">Open</button>
+                        </div>
+                    </div>*@
+                    <!-- /.attachment -->
+                </div>
+                <!-- /.item -->
+                }
+            }
+        }
+    </div>
+    <!-- /.chat -->
+    <div class="box-footer">
+        <form id="sendMessage" method="post">
+            <div class="input-group">
+                <input id="content" name="Content" class="form-control" placeholder="Nhập tin nhắn">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

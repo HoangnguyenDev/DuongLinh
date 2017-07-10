@@ -1,0 +1,61 @@
+ @model IEnumerable<Message>
+<div class="box box-success">
+    <div class="box-header">
+        <i class="fa fa-comments-o"></i>
+        <h3 class="box-title">Trò chuyện</h3>
+        <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+            @*<div class="btn-group" data-toggle="btn-toggle">
+                <button type="button" class="btn btn-default btn-sm active">
+                    <i class="fa fa-square text-green"></i>
+                </button>
+                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-square text-red"></i></button>
+            </div>*@
+        </div>
+    </div>
+    <div class="box-body chat" id="chat-box">
+        <!-- chat item -->
+        @if (!Model.Any())
+        {
+            <label>Chưa có cuộc chat nào. Bạn có thể bắt đầu chat ngay bây giờ</label>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                var time = String.Format("{0:hh\\:mm}", DateTime.Now.Subtract(item.DateTime));
+                <div class="item">
+                    <img src="@item.User.PictureSmall" alt="user image" class="online">
+                    <p class="message">
+                        <a href="#" class="name">
+                            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> @time</small>
+                            @item.User.FullName
+                        </a>
+                        @item.Content
+                    </p>
+                    @*<div class="attachment">
+                        <h4>Attachments:</h4>
+                        <p class="filename">
+                            Theme-thumbnail-image.jpg
+                        </p>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary btn-sm btn-flat">Open</button>
+                        </div>
+                    </div>*@
+                    <!-- /.attachment -->
+                </div>
+                            <!-- /.item -->
+            }
+        }
+    </div>
+    <!-- /.chat -->
+    <div class="box-footer">
+        <form id="sendMessage" method="post">
+            <div class="input-group">
+                <input id="content" name="Content" class="form-control" placeholder="Nhập tin nhắn">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

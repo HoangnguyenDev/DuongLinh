@@ -1,0 +1,41 @@
+@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="box box-primary">
+    <div class="box-header">
+        <div class="box-title">
+            <h3>@ViewData["BookName"]</h3>
+        </div>
+    </div>
+    <div class="box-body">
+        <table id="layout-skins-list" class="table table-striped bring-up nth-2-center">
+            <thead>
+                <tr>
+                    <th>Hạng</th>
+                    <th>Danh sách chương</th>
+                    <th>Xem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ 
+                    int number = 0;
+                }
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@number</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Score</td>
+                        @{ 
+                            number++;
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        </div>
+</div>
+

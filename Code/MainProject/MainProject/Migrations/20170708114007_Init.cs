@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MainProject.Migrations
 {
-    public partial class Init235234234512 : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -152,8 +152,10 @@ namespace MainProject.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     BookCategoryID = table.Column<int>(nullable: false),
                     Content = table.Column<string>(nullable: true),
+                    DateTime = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Slug = table.Column<string>(nullable: true)
+                    Slug = table.Column<string>(nullable: true),
+                    View = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -212,7 +214,7 @@ namespace MainProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "History",
+                name: "HistoryOfChappter",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -222,9 +224,9 @@ namespace MainProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_History", x => x.ID);
+                    table.PrimaryKey("PK_HistoryOfChappter", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_History_BookChappter_BookChappterID",
+                        name: "FK_HistoryOfChappter_BookChappter_BookChappterID",
                         column: x => x.BookChappterID,
                         principalTable: "BookChappter",
                         principalColumn: "ID",
@@ -258,6 +260,36 @@ namespace MainProject.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(nullable: true),
+                    BookChappterID = table.Column<int>(nullable: false),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    IsChapter = table.Column<bool>(nullable: false),
+                    IsReaded = table.Column<bool>(nullable: false),
+                    Online = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Notifications_BookChappter_BookChappterID",
+                        column: x => x.BookChappterID,
+                        principalTable: "BookChappter",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
@@ -275,8 +307,8 @@ namespace MainProject.Migrations
                 column: "BookCategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_History_BookChappterID",
-                table: "History",
+                name: "IX_HistoryOfChappter_BookChappterID",
+                table: "HistoryOfChappter",
                 column: "BookChappterID");
 
             migrationBuilder.CreateIndex(
@@ -293,6 +325,16 @@ namespace MainProject.Migrations
                 name: "IX_Message_ApplicationUserID",
                 table: "Message",
                 column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ApplicationUserID",
+                table: "Notifications",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_BookChappterID",
+                table: "Notifications",
+                column: "BookChappterID");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -324,13 +366,16 @@ namespace MainProject.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "History");
+                name: "HistoryOfChappter");
 
             migrationBuilder.DropTable(
                 name: "HistoryofRedingBook");
 
             migrationBuilder.DropTable(
                 name: "Message");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

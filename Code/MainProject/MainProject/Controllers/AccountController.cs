@@ -12,9 +12,11 @@ using Microsoft.Extensions.Options;
 using MainProject.Models;
 using MainProject.Models.AccountViewModels;
 using MainProject.Services;
+using MainProject.Data;
 
 namespace MainProject.Controllers
 {
+    
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -23,6 +25,7 @@ namespace MainProject.Controllers
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
         private readonly string _externalCookieScheme;
+        private ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -30,7 +33,8 @@ namespace MainProject.Controllers
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -38,6 +42,7 @@ namespace MainProject.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _context = context;
         }
 
         //
@@ -67,7 +72,7 @@ namespace MainProject.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
@@ -185,6 +190,8 @@ namespace MainProject.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
+                //_context.Add(new Notifications { Online = true, ApplicationUserID = (await GetCurrentUserAsync()).Id });
+                //await _context.SaveChangesAsync();
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -494,7 +501,12 @@ namespace MainProject.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
+        private Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
+        }
 
         #endregion
     }
+   
 }

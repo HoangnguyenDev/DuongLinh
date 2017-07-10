@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using MainProject.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using MainProject.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MainProject.Areas.Manager.Controllers
 {
     [Area("Manager")]
+    [Authorize(Roles = "Admin, Manager")]
     public class BookChappterController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BookChappterController(ApplicationDbContext context)
+        public BookChappterController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _userManager = userManager;
         }
 
         // GET: Manager/BookChappter
@@ -66,11 +71,13 @@ namespace MainProject.Areas.Manager.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
+                bookChappter.View = 0;
                 _context.Add(bookChappter);
+                _context.HistoryOfChappter.AddRange(new HistoryOfChappter {DateTime = DateTime.Now,BookChappterID= bookChappter.ID });
+                var  user = await GetCurrentUserAsync();
+                _context.Notifications.AddRange(new Notifications { DateTime = DateTime.Now, BookChappterID = bookChappter.ID ,  ApplicationUserID = user.Id, IsChapter=true});
                 await _context.SaveChangesAsync();
-                _context.History.AddRange(new History {DateTime = DateTime.Now,BookChappterID= bookChappter.ID });
-                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewData["BookCategoryID"] = new SelectList(_context.BookCategory, "ID", "CategoryName", bookChappter.BookCategoryID);
@@ -167,6 +174,10 @@ namespace MainProject.Areas.Manager.Controllers
         private bool BookChappterExists(int id)
         {
             return _context.BookChappter.Any(e => e.ID == id);
+        }
+        private Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
         }
     }
 }

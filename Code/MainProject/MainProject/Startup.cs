@@ -24,11 +24,13 @@ namespace MainProject
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets<Startup>();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
+            //    builder.AddUserSecrets<Startup>();
+            //}
+            //else
+            //    builder.AddUserSecrets<Startup>();
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -92,16 +94,17 @@ namespace MainProject
             {
                 LoginPath = "/dang-nhap",
                 AuthenticationScheme = "Cookies",
-                
+
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });
             app.UseFacebookAuthentication(new FacebookOptions()
             {
-                AppId = Configuration["Authentication:Facebook:AppId"],
-                AppSecret = Configuration["Authentication:Facebook:AppSecret"]
+                AppId =  "1936754129675486",
+                AppSecret = "224af05078f6cce66a562a0bd1058d75",
+                SaveTokens = true,
             });
-            
+
 
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
@@ -112,9 +115,10 @@ namespace MainProject
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(name: "areaRoute",
-       template: "{area:exists}/{controller=Home}/{action=Index}");
+                    template: "{area:exists}/{controller=Home}/{action=Index}");
 
             });
+            //await SeedData.CreateExampleAccount(app.ApplicationServices);
         }
     }
 }

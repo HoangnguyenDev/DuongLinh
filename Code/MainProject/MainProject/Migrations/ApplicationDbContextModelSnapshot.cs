@@ -104,9 +104,13 @@ namespace MainProject.Migrations
 
                     b.Property<string>("Content");
 
+                    b.Property<DateTime>("DateTime");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Slug");
+
+                    b.Property<int>("View");
 
                     b.HasKey("ID");
 
@@ -115,7 +119,7 @@ namespace MainProject.Migrations
                     b.ToTable("BookChappter");
                 });
 
-            modelBuilder.Entity("MainProject.Models.History", b =>
+            modelBuilder.Entity("MainProject.Models.HistoryOfChappter", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
@@ -128,7 +132,7 @@ namespace MainProject.Migrations
 
                     b.HasIndex("BookChappterID");
 
-                    b.ToTable("History");
+                    b.ToTable("HistoryOfChappter");
                 });
 
             modelBuilder.Entity("MainProject.Models.HistoryofRedingBook", b =>
@@ -167,6 +171,32 @@ namespace MainProject.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("MainProject.Models.Notifications", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserID");
+
+                    b.Property<int>("BookChappterID");
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<bool>("IsChapter");
+
+                    b.Property<bool>("IsReaded");
+
+                    b.Property<bool>("Online");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("BookChappterID");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
@@ -284,7 +314,7 @@ namespace MainProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MainProject.Models.History", b =>
+            modelBuilder.Entity("MainProject.Models.HistoryOfChappter", b =>
                 {
                     b.HasOne("MainProject.Models.BookChappter", "ChappterID")
                         .WithMany()
@@ -309,6 +339,18 @@ namespace MainProject.Migrations
                     b.HasOne("MainProject.Models.ApplicationUser", "User")
                         .WithMany("Message")
                         .HasForeignKey("ApplicationUserID");
+                });
+
+            modelBuilder.Entity("MainProject.Models.Notifications", b =>
+                {
+                    b.HasOne("MainProject.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID");
+
+                    b.HasOne("MainProject.Models.BookChappter", "BookChappter")
+                        .WithMany()
+                        .HasForeignKey("BookChappterID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

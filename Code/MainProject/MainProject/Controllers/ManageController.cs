@@ -13,7 +13,7 @@ using MainProject.Services;
 
 namespace MainProject.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Manager, Member")]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

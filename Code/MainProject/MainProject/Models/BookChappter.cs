@@ -22,6 +22,10 @@ namespace MainProject.Models
 
         public string Content { get; set; }
 
+        public int View { get; set; }
+
+        public DateTime DateTime { get; set; }
+
         public int BookCategoryID { get; set; }
         public BookCategory CategoryID { get; set; }
 

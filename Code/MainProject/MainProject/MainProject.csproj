@@ -433,7 +433,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Manager\Controllers\" />
+    <Folder Include="Areas\Manager\Views\Score\" />
     <Folder Include="Areas\Manager\Views\Shared\" />
     <Folder Include="Views\Book\" />
+    <Folder Include="Views\Messenger\" />
   </ItemGroup>
 </Project>

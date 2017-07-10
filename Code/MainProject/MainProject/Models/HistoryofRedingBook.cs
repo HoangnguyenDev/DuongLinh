@@ -18,7 +18,5 @@ namespace MainProject.Models
         public BookChappter BookChappter { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser User { get; set; }
-
-        
     }
 }

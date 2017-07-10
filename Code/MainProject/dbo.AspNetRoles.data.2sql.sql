@@ -1,0 +1,4 @@
+﻿
+INSERT INTO [dbo].[AspNetUsers] ([Id], [AccessFailedCount], [ConcurrencyStamp], [DateofBirth], [Email], [EmailConfirmed], [Facebook], [FullName], [LockoutEnabled], [LockoutEnd], [NormalizedEmail], [NormalizedUserName], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [PictureBig], [PictureSmall], [Score], [SecurityStamp], [TwoFactorEnabled], [UserName]) VALUES (N'84c1c064-e13e-4d40-b688-4c9093322e45', 0, N'641e0d9b-22df-40ab-92e6-dff131b04eac', NULL, N'nguyen.nah76@gmail.com', 0, NULL, N'Nguyên Nguyễn', 1, NULL, N'NGUYEN.NAH76@GMAIL.COM', N'NGUYENK15', NULL, NULL, 0, N'https://graph.facebook.com/1187008678111344/picture?width=160&height=160', N'https://graph.facebook.com/1187008678111344/picture?width=128&height=128', 2, N'd83df34f-39f6-484c-a224-2dce0ac56827', 0, N'nguyenk15')
+INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'84c1c064-e13e-4d40-b688-4c9093322e45', N'5649408e-dc22-43cf-a277-44437ce2a8a8')
+

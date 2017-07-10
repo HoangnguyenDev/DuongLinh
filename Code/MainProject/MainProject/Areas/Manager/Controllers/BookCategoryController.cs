@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MainProject.Data;
 using MainProject.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MainProject.Areas.Manager.Controllers
 {
     [Area("Manager")]
+    [Authorize(Roles = "Admin, Manager")]
     public class BookCategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -157,5 +159,7 @@ namespace MainProject.Areas.Manager.Controllers
         {
             return _context.BookCategory.Any(e => e.ID == id);
         }
+
+
     }
 }

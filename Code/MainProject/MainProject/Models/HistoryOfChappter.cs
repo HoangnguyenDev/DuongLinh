@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace MainProject.Models
 {
-    public class History
+    public class HistoryOfChappter
     {
+        // Lich su them sach
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }

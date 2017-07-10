@@ -1,48 +1,117 @@
-﻿@model List<History>
-@using MainProject.Data;
+﻿@using MainProject.Data;
 @inject ApplicationDbContext Context
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h2 class="panel-title">Mới nhất</h2>
-    </div>
-    <div class="panel-body">
-        @if (null == Model)
-        {
-            <label>Chưa có HD NA</label>
-        }
-        else
-        {
-            int number = 0;
-            @foreach (var item in Model)
-            {
-                string CategoryName = Context.BookCategory.Where(p => p.ID == item.ChappterID.BookCategoryID).FirstOrDefault().CategoryName;
-                if (number == 0)
+@{
+    ViewData["H1"] = "Trang chủ";
+    IEnumerable<HistoryOfChappter> historyOfChappter = ViewData["HistoryofChappter"] as IEnumerable<HistoryOfChappter>;
+    IEnumerable<Notifications> notifications = ViewData["Notifications"] as IEnumerable<Notifications>;
+    IEnumerable<Message> message = ViewData["Messenger"] as IEnumerable<Message>;
+    IEnumerable<HistoryofRedingBook> historyOfReading = ViewData["HistoryofReading"] as IEnumerable<HistoryofRedingBook>;
+}   
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2 class="panel-title">Mới nhất</h2>
+            </div>
+            <div class="panel-body">
+                @if (!historyOfChappter.Any())
                 {
-                    ViewData["ColorPanel"] = "panel-success";
-                    number = 1;
+                    <label>Chưa có HD NA</label>
                 }
                 else
                 {
-                    ViewData["ColorPanel"] = "panel-danger";
-                    number = 0;
+                    int number = 0;
+                    @foreach (var item in historyOfChappter)
+                    {
+                        string CategoryName = Context.BookCategory.Where(p => p.ID == item.ChappterID.BookCategoryID).FirstOrDefault().CategoryName;
+                        if (number == 0)
+                        {
+                            ViewData["ColorPanel"] = "panel-success";
+                            number = 1;
+                        }
+                        else
+                        {
+                            ViewData["ColorPanel"] = "panel-danger";
+                            number = 0;
+                        }
+                        <div class="panel @ViewData["ColorPanel"]">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><a asp-action="">Sách: @CategoryName</a></h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            @{ 
+                                                ViewData["IsReaded"] = "text-blue";
+                                                if (historyOfReading.Any())
+                                                {
+                                                    var IsReaded = historyOfReading.Where(p => p.BookChappterID == item.ChappterID.ID).First();
+                                                    if (IsReaded != null)
+                                                    {
+                                                        ViewData["IsReaded"] = "text-black";
+                                                    }
+                                                }
+                                            }
+                                            <th><a asp-action="index" class="@ViewData["IsReaded"]" asp-controller="book" asp-route-slugCa="@item.ChappterID.CategoryID.Slug" asp-route-slugCh="@item.ChappterID.Slug">@item.ChappterID.Name</a></th>
+                                            <th class="@ViewData["IsReaded"]">Đã thêm vào @item.DateTime</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
                 }
-                <div class="panel @ViewData["ColorPanel"]">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><a asp-action="">@CategoryName</a></h3>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th><a asp-action="index" asp-controller="book" asp-route-slugCa="@item.ChappterID.CategoryID.Slug" asp-route-slugCh="@item.ChappterID.Slug">@item.ChappterID.Name</a></th>
-                                    <th>@item.DateTime</th>
-                                </tr>
-                            </tbody>
-                        </table>        
-                    </div>
-                </div>
-            }
-        }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <!-- Chat box -->
+        @Html.Partial("~/Views/Messenger/Index.cshtml",message)
+        <!-- /.box (chat box) -->
+        <!-- Notifications-->
+        @Html.Partial("~/Views/Notifications/Index.cshtml",notifications)
+        <!-- /.Notifications-->
     </div>
 </div>
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#chat-box').slimScroll({
+                height: '250px'
+            });
+        });
+        $(function () {
+            $('#notification-box').slimScroll({
+                height: '250px'
+            });
+        });
+        
+        $('#sendMessage').submit(function (e) {
+            //var myEmail = {
+            //    From: $('#MailFrom').val(),
+            //    To: $('#MailTo').val(),
+            //    Subject: $('#MailSubject').val(),
+            //    MailBody: $('#MailBody').val()
+            //};
+            var content = $('#content').val()
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("Submit", "Messenger"))",
+                data: { content: content },
+                dataType: "json",
+                //success: function (result) {
+                //    alert("Mail envoyé.");
+                //},
+                //error: function (result) {
+                //    alert("Echec lors de l'envoi du mail.");
+                //}
+            });
+        });
+    </script>
+}
+
+
+
+
 
